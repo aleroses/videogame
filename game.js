@@ -4,13 +4,17 @@
 
 const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
+let canvasSize;
+let elementsSize; //10%
 
-window.addEventListener('load', startGame);
+window.addEventListener('load', setCanvasSize);
+window.addEventListener('resize', setCanvasSize);
 
-function startGame(){
+
+
+
+function setCanvasSize(){
     // Medidas del canvas
-    let canvasSize;
-
     if(window.innerHeight > window.innerWidth){
         canvasSize = window.innerWidth * 0.8;
     }else{
@@ -21,10 +25,14 @@ function startGame(){
     canvas.setAttribute('height', canvasSize);
 
     // Renderizar Bomba
-    const elementsSize = (canvasSize / 10) - 1; //10%
-    console.log({ canvasSize, elementsSize});
+    elementsSize = (canvasSize * 0.1) - 1;
 
-    game.font = elementsSize + 'px Verdana';
+    startGame();
+}
+
+function startGame(){
+
+    game.font = `${elementsSize}px Verdana`;
     game.textAlign = "";
 
     for (let i = 0; i < 10; i++) {
@@ -32,9 +40,9 @@ function startGame(){
     }
     
 
-    /* game.fillText(emojis['X'], 100, 100); */
+    /* game.fillText(emojis['X'], 100, 100);
 
-    /* 
+    
     window.innerHeight
     window.innerWidth
     game.fillRect( xinicial, yinicial, width, height)
@@ -48,3 +56,40 @@ function startGame(){
     game.textAlign = 'end';
     game.fillText('Platzi', 180, 80); */
 }
+
+
+
+
+
+
+
+
+/* const canvas = document.querySelector('#game');
+const game = canvas.getContext('2d');
+
+window.addEventListener('load', start_game);
+
+function start_game(){
+    // Medidas del Canvas  
+    let canva_size;
+
+    if(window.innerHeight > window.innerWidth){
+        canva_size = window.innerWidth * 0.8;
+    }else{
+        canva_size = window.innerHeight * 0.8;
+    }
+
+    canvas.setAttribute('width', canva_size);
+    canvas.setAttribute('height', canva_size);
+
+    // Renderizar Bomba
+    let elements_size = (canva_size * 0.1) - 1; 
+    game.font = `${elements_size}px Verdana`;
+    console.log(elements_size);
+
+    for(let x=0; x<10; x++){
+        for(let y=1; y<11; y++){
+            game.fillText(emojis['X'], elements_size * x, elements_size * y);
+        }
+    }
+} */

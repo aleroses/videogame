@@ -2,11 +2,14 @@
  * @type {HTMLCanvasElement}
 **/
 
-
-/* const canvas = document.querySelector('#game');
+const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
 let canvasSize;
 let elementsSize; //10%
+const btnUp = document.querySelector('#up');
+const btnLeft = document.querySelector('#left');
+const btnRight = document.querySelector('#right');
+const btnDown = document.querySelector('#down');
 
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
@@ -45,18 +48,9 @@ function startGame(){
             game.fillText(emoji, posX, posY)
         })
     });
-
-
-    for (let x=1; x<=10; x++) {
-        for (let y=1; y<=10; y++) {
-            game.fillText(emojis[mapRowCols[x - 1][y - 1]], elementsSize * y, elementsSize * x);
-        }
-    }
-    
-
     
     
-    game.fillText(emojis['X'], 100, 100);
+    /* game.fillText(emojis['X'], 100, 100);
     window.innerHeight
     window.innerWidth
     game.fillRect( xinicial, yinicial, width, height)
@@ -68,18 +62,53 @@ function startGame(){
     game.font = '25px Verdana';
     game.fillStyle = 'purple';
     game.textAlign = 'end';
-    game.fillText('Platzi', 180, 80);
-}  */
+    game.fillText('Platzi', 180, 80); */
+} 
+
+window.addEventListener('keydown', moveBykeys); //keyup
+btnUp.addEventListener('click', moveUp);
+btnLeft.addEventListener('click', moveLeft);
+btnRight.addEventListener('click', moveRight);
+btnDown.addEventListener('click', moveDown);
+
+function moveBykeys(event){
+    if (event.key == 'ArrowUp') moveUp();
+    else if(event.key == 'ArrowLeft') moveLeft();
+    else if (event.key == 'ArrowRight') moveRight();
+    else if(event.key == 'ArrowDown') moveDown();
+    console.log(event); // revisar code or key: "ArrowUp"
+}
+
+function moveUp(){
+    console.log('arriba');
+}
+function moveLeft(){
+    console.log('izquierda');
+}
+function moveRight(){
+    console.log('derecha');
+}
+function moveDown(){
+    console.log('abajo');
+}
 
 
-const canvas = document.querySelector('#game');
-const game = canvas.getContext('2d')
+
+
+
+
+
+/* const canvas = document.querySelector('#game');
+const game = canvas.getContext('2d');
 let canvas_size;
 let elements_size;
+let map;
+let emoji;
+let x;
+let y;
 
 window.addEventListener('load', calculate_canvas_size);
-window.addEventListener('resize', calculate_canvas_size)
-
+window.addEventListener('resize', calculate_canvas_size);
 
 function calculate_canvas_size(){
     window.innerHeight > window.innerWidth
@@ -89,35 +118,25 @@ function calculate_canvas_size(){
     canvas.setAttribute('width', canvas_size);
     canvas.setAttribute('height', canvas_size);
 
-    calculate_elements_size()
+    calculate_elements_size();
 }
 
 function calculate_elements_size(){
-    const map = maps[0];
-    const map_rows = map.trim().split('\n');
-    const map_rows_cols = map_rows.map(row => row.trim().split(''));
-
     elements_size = (canvas_size * 0.1) - 1;
     game.font = `${elements_size}px Verdana`;
 
+    map = (maps[0].trim().split('\n')).map(x => x.trim().split(''));
+    console.log({map});
 
-    map_rows_cols.forEach((row, ri) => { // element, indice
-        // ['I', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X']
+    map.forEach((row, ri) => { // element, index
         row.forEach((col, ci) => {
-            // I
-            const emoji = emojis[col];
-            const x = elements_size * ci;
-            const y = elements_size * (ri+1);
+            emoji = emojis[col];
+            x = elements_size * ci;
+            y = elements_size * (ri+1);
+
             game.fillText(emoji, x, y);
-        })
+        });
     });
-
-
-    /* for (let x = 0; x < 10; x++) {
-        for (let y = 0; y < 10; y++) {
-            game.fillText(emojis[map_rows_cols[x][y]], elements_size * x, elements_size * (y+1));
-        }
-    } */
-}
+} */
 
 // registro de la consola: console log

@@ -2,11 +2,12 @@
  * @type {HTMLCanvasElement}
 **/
 
-/* const canvas = document.querySelector('#game');
+const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
 let canvasSize;
 let elementsSize; //10%
 let level = 0;
+let lives = 3;
 const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
@@ -47,6 +48,7 @@ function startGame(){
     const map = maps[level];
 
     if(!map){
+        console.log();
         gameWin();
         return;
     }
@@ -102,7 +104,7 @@ function movePlayer(){
     });
     
     if(enemyCollision){
-        console.log('chocaste con enemy');
+        levelFail();
     }
 
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y)
@@ -111,6 +113,19 @@ function movePlayer(){
 function levelWin(){
     console.log('Win');;
     level++;
+    startGame();
+}
+
+function levelFail(){
+    lives--;
+
+    if(lives <= 0){
+        level = 0;
+        lives = 3;
+    }
+
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
     startGame();
 }
 
@@ -168,7 +183,7 @@ function moveDown(){
         playerPosition.y += elementsSize;
         startGame();
     }
-} */
+}
 
 // Hacer resumenen de cada punto:
 // 1. Definir el tamaño del canvas
@@ -181,8 +196,9 @@ function moveDown(){
 // 5. Detectar colisión: player vs gift
 // 6. Detectar colisión: player vs enemy bomb
 // 7. Renderizar el siguiente mapa
+// 8. Quitar vidas 
 
-const canvas = document.querySelector('#game');
+/* const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
 let canvas_size;
 let elements_size;
@@ -230,33 +246,30 @@ function calculate_elements_size(){
 
 
     bomb_position = []
-    if (map) {
-        map.forEach((row, ri) => { // element, index
-            row.forEach((col, ci) => {
-                const emoji = emojis[col];
-                const x = elements_size * ci;
-                const y = elements_size * (ri+1);
+    map.forEach((row, ri) => { // element, index
+        row.forEach((col, ci) => {
+            const emoji = emojis[col];
+            const x = elements_size * ci;
+            const y = elements_size * (ri+1);
                 
-                if(col == 'O' && (!player_position.x && !player_position.y)){
-                    // !player_position
-                    player_position.x = x / elements_size;
-                    player_position.y = y / elements_size;
-                }else if(col == 'I'){
-                    gift_position.x = x / elements_size;
-                    gift_position.y = y / elements_size;
-                }else if(col == 'X'){
-                    bomb_position.push({
-                        x: x / elements_size,
-                        y: y / elements_size,
-                    });
-                }
+            if(col == 'O' && (!player_position.x && !player_position.y)){
+                // !player_position
+                player_position.x = x / elements_size;
+                player_position.y = y / elements_size;
+            }else if(col == 'I'){
+                gift_position.x = x / elements_size;
+                gift_position.y = y / elements_size;
+            }else if(col == 'X'){
+                bomb_position.push({
+                    x: x / elements_size,
+                    y: y / elements_size,
+                });
+            }
     
-                game.fillText(emoji, x, y); 
-            });
+            game.fillText(emoji, x, y); 
         });
-    }else{
-        
-    }
+    });
+
     move_player();
 }
 
@@ -326,5 +339,5 @@ function move_down(){
         player_position.y += 1;
         calculate_canvas_size();
     }
-}
+} */
 // registro de la consola

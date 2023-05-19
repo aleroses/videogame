@@ -8,12 +8,16 @@ const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
-const spanLives = document.querySelector('#lives')
+const spanLives = document.querySelector('#lives');
+const spanTime = document.querySelector('#time');
 
 let canvasSize;
 let elementsSize; //10%
 let level = 0;
 let lives = 3;
+let timeStart;
+let timePlayer;
+let timeInterval;
 
 const playerPosition = {
     x: undefined,
@@ -54,6 +58,10 @@ function startGame(){
         console.log();
         gameWin();
         return;
+    }
+    if(!timeStart){
+        timeStart = Date.now();
+        timeInterval = setInterval(showTime, 100);
     }
 
     const mapRows = map.trim().split('\n');
@@ -126,6 +134,7 @@ function levelFail(){
     if(lives <= 0){
         level = 0;
         lives = 3;
+        timeStart = undefined;
     }
 
     playerPosition.x = undefined;
@@ -135,6 +144,7 @@ function levelFail(){
 
 function gameWin(){
     console.log('Terminaste el juego');
+    clearInterval(timeInterval);
 }
 
 function showLives(){   
@@ -143,6 +153,10 @@ function showLives(){
     
     spanLives.innerHTML = ''; // limpiamos corazones
     heartsArray.forEach(heart => spanLives.append(heart)); // adjuntar
+}
+
+function showTime(){
+    spanTime.innerText = Date.now() - timeStart;
 }
 
 window.addEventListener('keydown', moveBykeys); //keyup
@@ -209,29 +223,36 @@ function moveDown(){
 // 7. Renderizar el siguiente mapa
 // 8. Quitar vidas 
 // 9. Mostrar vidas en pantalla
+// 10. Agregar un temporizador 
 
+// errores
+// si gano y sigo moviendo los keys el tiempo incrementa 
+// si pierdo las 3 vidas el cronometro arranca sin que se empiece a jugar
 const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
 const btn_up = document.querySelector('#up');
 const btn_left = document.querySelector('#left');
 const btn_right = document.querySelector('#right');
 const btn_down = document.querySelector('#down');
-const span_lives = document.querySelector('#lives');
+const span_lives = document.querySelector('#lives')
+const span_time = document.querySelector('#time')
+
+const player_position = {
+    x: undefined,
+    y: undefined,
+}
+const gift_position = {
+    x: undefined,
+    y: undefined,
+}
 
 let canvas_size;
 let elements_size;
 let level = 0;
 let lives = 3;
-
-const player_position = {
-    x: undefined,
-    y: undefined,
-};
-const gift_position = {
-    x: undefined,
-    y: undefined,
-};
-
+let time_start;
+let time_player;
+let time_interval;
 let bomb_position = [];
 
 window.addEventListener('load', calculate_canvas_size);
@@ -255,30 +276,32 @@ function calculate_canvas_size(){
 }
 
 function calculate_elements_size(){
-    elements_size = Math.floor(canvas_size * 0.1);
-    game.font = `${elements_size}px Verdana`;
-
-    const map_number = maps[level];
-    if(!map_number){
-        game_win();
-        return;
-    }
-
-    const map = (map_number.trim().split('\n')).map(x => x.trim().split(''));
+    elements_size = Math.floor((canvas_size * 0.1)-0.5);
+    game.font = `${elements_size}px Verdana`
     
+    const map_number = maps[level];
+    
+    if (!map_number) {
+        game_win();
+        return
+    }
+    /* if(!time_start){
+        time_start = Date.now();
+        time_interval = setInterval(show_time, 100);
+    } */
+    
+    const map = (map_number.trim().split('\n')).map(x => x.trim().split(''));
     bomb_position = [];
-    map.forEach((row, ri) => { //elemen, index
+    map.forEach((row, ri) => { // element, index
         row.forEach((col, ci) => {
-            const emoji = emojis[col]
-            const x = Math.floor(elements_size * ci);
-            const y = Math.floor(elements_size * (ri+1));
-
-            game.fillText(emoji, x, y);
-
+            const emoji = emojis[col];
+            const x = elements_size * ci;
+            const y = elements_size * (ri+1);
+            
             if(col == 'O' && (!player_position.x && !player_position.y)){
                 player_position.x = x / elements_size;
                 player_position.y = y / elements_size;
-            }else if(col == 'I'){
+            }else if (col == 'I'){
                 gift_position.x = x / elements_size;
                 gift_position.y = y / elements_size;
             }else if(col == 'X'){
@@ -287,21 +310,23 @@ function calculate_elements_size(){
                     y: y / elements_size,
                 });
             }
+
+            game.fillText(emoji, x, y);
         });
     });
     move_player();
     show_lives();
 }
 
-function move_player() {
-    const gift_collision_x = gift_position.x == player_position.x;
-    const gift_collision_y = gift_position.y == player_position.y;
-    const gift_collision = gift_collision_x && gift_collision_y;
-    
+function move_player(){
+    const gift_collision_x = player_position.x == gift_position.x;
+    const gift_collision_y = player_position.y == gift_position.y;
+    const gift_collision = gift_collision_x && gift_collision_y
+
     const bomb_collision = bomb_position.find(bomb => {
-        const bomb_position_x = bomb.x == player_position.x;
-        const bomb_position_y = bomb.y == player_position.y;
-        return bomb_position_x && bomb_position_y;
+        const bomb_collision_x = bomb.x == player_position.x;
+        const bomb_collision_y = bomb.y == player_position.y;
+        return bomb_collision_x && bomb_collision_y;
     });
 
     if(gift_collision){
@@ -310,36 +335,52 @@ function move_player() {
     if(bomb_collision){
         level_fail();
     }
-    
+
     game.fillText(emojis['PLAYER'], player_position.x*elements_size, player_position.y*elements_size);
 }
 function level_win(){
     level++;
     calculate_canvas_size();
+    console.log('You win!!');
 }
 function level_fail(){
     lives--;
-
-    if(lives <= 0){
+    if (lives == 0){
         level = 0;
         lives = 3;
+
+        time_start = undefined;
     }
 
     player_position.x = undefined;
     player_position.y = undefined;
+
     calculate_canvas_size();
+    console.log('You collided with a bomb...');
 }
 function game_win(){
-    console.log('You finished the game');
+    console.log('You finished the game :)');
+    clearInterval(time_interval);
 }
 function show_lives(){
-    /* const hearts_array = Array(lives).fill(emojis['HEART']);
-
-    span_lives.innerText = '';
-    hearts_array.forEach(heart => span_lives.append(heart)); */
-
     span_lives.innerText = emojis['HEART'].repeat(lives);
+    // const hearts_array = Array(lives).fill(emojis['HEART'])
+    
+    // span_lives.innerText = '';
+    // hearts_array.forEach(heart => span_lives.append(heart));
 }
+function calculate_time(){
+    if(!time_start){
+        time_start = Date.now();
+        time_interval = setInterval(show_time, 100)
+    }
+}
+function show_time(){
+    // tiempo transcurrido     
+    span_time.innerText = Date.now() - time_start;
+}
+
+
 function move_by_keys(event){
     // console.log(event.key);
     if(event.key == 'ArrowUp') move_up();
@@ -352,23 +393,33 @@ function move_up(){
         player_position.y -= 1;
     }
     calculate_canvas_size();
+    calculate_time();
+    show_time();
+
 }
 function move_left(){
     if(player_position.x > 0){
         player_position.x -= 1;
     }
     calculate_canvas_size();
+    calculate_time();
+    show_time();
+
 }
 function move_right(){
     if(player_position.x < 9){
         player_position.x += 1;
     }
     calculate_canvas_size();
+    calculate_time();
+    show_time();
 }
-function move_down(){
+function move_down() {
     if(player_position.y < 10){
         player_position.y += 1;
     }
     calculate_canvas_size();
+    calculate_time();
+    show_time();
 }
 // registro de la consola

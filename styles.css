@@ -41,23 +41,43 @@ button {
     margin: 0;
     padding: 5px 20px;
     width: 100px;
+    font-weight: bold;
 }
 button:not(:last-child) {
     margin-right: 10px;
 }
 
-.messages {
+.grid-footer{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+.messages{
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;
     width: 80%;
     max-width: 460px;
 }
+.play-again{
+    display: flex;
+    /* flex-wrap: wrap; */
+    margin: 0 auto;
+    width: 80%;
+    max-width: 460px;
+    justify-content: flex-end;
+}
 
 p {
     display: block;
     margin: 0;
     width: 100%;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+#result{
+    text-align: center;
 }
 
 @media (max-width: 440px) {

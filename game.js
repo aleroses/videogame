@@ -32,6 +32,7 @@ const span_lives = document.querySelector('#lives');
 const span_time = document.querySelector('#time');
 const span_record = document.querySelector('#record');
 const p_result = document.querySelector('#result');
+const btn_reset = document.querySelector('#reset');
 
 let canvas_size;
 let elements_size;
@@ -59,6 +60,7 @@ btn_up.addEventListener('click', move_up);
 btn_left.addEventListener('click', move_left);
 btn_right.addEventListener('click', move_right);
 btn_down.addEventListener('click', move_down);
+btn_reset.addEventListener('click', reset_game);
 
 function calculate_canvas_size(){
     window.innerHeight > window.innerWidth
@@ -154,6 +156,7 @@ function game_win(){
 
     player_position.x = undefined;
     player_position.y = undefined;
+    game.font = "bold 20px Verdana";
     game.fillText('You Win 🏆', canvas_size*0.25, canvas_size*0.5);
 
     // Tiempo anterior vs el nuevo tiempo del jugador
@@ -194,7 +197,9 @@ function show_time(){
 function show_record(){
     span_record.innerText = localStorage.getItem('record_time');
 }
-
+function reset_game(){
+    location.reload();
+}
 
 function move_by_keys(event){
     // console.log(event.key);

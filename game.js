@@ -156,9 +156,9 @@ function game_win(){
 
     player_position.x = undefined;
     player_position.y = undefined;
-    game.font = "bold 20px Verdana";
-    game.textAlign = 'center center';
-    game.fillText('You Win 🏆', canvas_size*0.25, canvas_size*0.5);
+    game.font = `bold ${elements_size}px Verdana`
+    game.textAlign = 'center';
+    game.fillText('You Win 🏆', canvas_size / 2, canvas_size / 2);
 
     // Tiempo anterior vs el nuevo tiempo del jugador
     const last_record = localStorage.getItem('record_time');
